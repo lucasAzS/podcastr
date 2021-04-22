@@ -113,7 +113,7 @@ export const getStaticProps: GetStaticProps = async () => {
   const { data } = await api.get('episodes', {
     params: {
       _limit: 12,
-      _sort: 'published_at',
+      _sort: 'publishedAt',
       order: 'desc',
     },
   });
@@ -143,6 +143,6 @@ export const getStaticProps: GetStaticProps = async () => {
       latestEpisodes,
       allEpisodes,
     },
-    revalidate: 60 * 60 * 8,
+    revalidate: 60 * 60 * 8, // 8hrs
   };
 };
