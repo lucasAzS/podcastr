@@ -1,11 +1,14 @@
-import { api } from '../services/api';
-import { convertDurationToTimeString } from '../utils/convertDurationToTimeString';
+import { useContext } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
 
 import { GetStaticProps } from 'next';
 import { format, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import Link from 'next/link';
-import Image from 'next/image';
+
+import { api } from '../services/api';
+import { convertDurationToTimeString } from '../utils/convertDurationToTimeString';
+import { PlayerContext } from '../contexts/PlayerContext';
 
 import styles from './home.module.scss';
 
@@ -26,6 +29,8 @@ type HomeProps = {
 };
 
 export default function Home({ latestEpisodes, allEpisodes }: HomeProps) {
+  const { play } = useContext(PlayerContext);
+
   return (
     <div className={styles.homepage}>
       <section className={styles.latestEpisodes}>
@@ -51,7 +56,7 @@ export default function Home({ latestEpisodes, allEpisodes }: HomeProps) {
                   <span>{episode.durationsAsString}</span>
                 </div>
 
-                <button type='button'>
+                <button type='button' onClick={() => play(episode)}>
                   <img src='/play-green.svg' alt='Tocar episodio' />
                 </button>
               </li>
@@ -113,8 +118,8 @@ export const getStaticProps: GetStaticProps = async () => {
   const { data } = await api.get('episodes', {
     params: {
       _limit: 12,
-      _sort: 'publishedAt',
-      order: 'desc',
+      _sort: 'published_at',
+      _order: 'desc',
     },
   });
 
